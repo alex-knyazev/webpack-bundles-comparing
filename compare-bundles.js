@@ -22,17 +22,19 @@ async function run() {
 
   buildAndAnalyze();
 
-  const currentBundleStatsPath = moveStatsFile(ref1);
+  const ref1BundleStatsPath = moveStatsFile(ref1);
 
   gitCheckout(ref2);
 
   buildAndAnalyze();
 
-  const comparedBundleStatsPath = moveStatsFile(ref2);
+  const ref2BundleStatsPath = moveStatsFile(ref2);
 
   gitCheckout(ref1);
 
-  compareBundles(currentBundleStatsPath, comparedBundleStatsPath);
+  compareBundles(ref1BundleStatsPath, ref2BundleStatsPath);
+
+  removeStatsFiles(ref1BundleStatsPath, ref2BundleStatsPath);
 }
 
 function buildAndAnalyze(currentHash) {
@@ -75,4 +77,9 @@ function compareBundles(statsPath1, statsPath2) {
   ]);
 
   console.log(result.stdout.toString());
+}
+
+function removeStatsFiles(statsPath1, statsPath2) {
+  fs.unlinkSync(statsPath1);
+  fs.unlinkSync(statsPath2);
 }
